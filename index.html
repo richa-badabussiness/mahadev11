@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Choose 11 out of 22 Game</title>
+</head>
+
+<body>
+    <h2>Choose 11 out of 22 Game</h2>
+    <p>Choose 11 names out of 22 names randomly for 10 rounds.</p>
+
+    <div id="game">
+        <!-- Content will be added dynamically here -->
+    </div>
+
+    <script>
+        // JavaScript logic can be added here for interactivity
+    </script>
+
+</body>
+
+</html>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Choose 11 out of 22 Game</title>
+</head>
+
+<body>
+    <h2>Choose 11 out of 22 Game</h2>
+    <p>Choose 11 names out of 22 names randomly for 10 rounds.</p>
+
+    <div id="game">
+        <!-- Content will be added dynamically here -->
+    </div>
+
+    <script>
+        const names = [
+            // Add 22 names here
+            "Name1",
+            "Name2",
+            // Add more names
+            "Name22"
+        ];
+
+        function chooseNames() {
+            for (let i = 0; i < 10; i++) {
+                const roundContainer = document.createElement('div');
+                const roundHeading = document.createElement('h3');
+                roundHeading.innerText = `Round ${i + 1}`;
+                roundContainer.appendChild(roundHeading);
+
+                const selectedNames = [];
+                while (selectedNames.length < 11) {
+                    const randomIndex = Math.floor(Math.random() * names.length);
+                    const randomName = names[randomIndex];
+                    if (!selectedNames.includes(randomName)) {
+                        selectedNames.push(randomName);
+                    }
+                }
+
+                const roundList = document.createElement('ul');
+                selectedNames.forEach(name => {
+                    const listItem = document.createElement('li');
+                    listItem.innerText = name;
+                    roundList.appendChild(listItem);
+                });
+
+                roundContainer.appendChild(roundList);
+                document.getElementById('game').appendChild(roundContainer);
+            }
+        }
+
+        chooseNames();
+    </script>
+
+</body>
+
+</html>
