@@ -1,80 +1,112 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Choose 11 out of 22 Game</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Game</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #card-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            width: 80px;
+            height: 120px;
+            margin: 5px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .red-card {
+            background-color: red;
+            color: white;
+        }
+
+        .blue-card {
+            background-color: blue;
+            color: white;
+        }
+    </style>
 </head>
-
 <body>
-    <h2>Choose 11 out of 22 Game</h2>
-    <p>Choose 11 names out of 22 names randomly for 10 rounds.</p>
 
-    <div id="game">
-        <!-- Content will be added dynamically here -->
-    </div>
+<div id="card-container"></div>
+<button onclick="startGame()">Start</button>
+<button onclick="pauseGame()">Pause</button>
+<button onclick="finishGame()">Finish</button>
 
-    <script>
-        // JavaScript logic can be added here for interactivity
-    </script>
+<script>
+    let cards = [];
+    let shuffleInterval;
 
-</body>
-
-</html>
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Choose 11 out of 22 Game</title>
-</head>
-
-<body>
-    <h2>Choose 11 out of 22 Game</h2>
-    <p>Choose 11 names out of 22 names randomly for 10 rounds.</p>
-
-    <div id="game">
-        <!-- Content will be added dynamically here -->
-    </div>
-
-    <script>
-        const names = [
-            // Add 22 names here
-            "Name1",
-            "Name2",
-            // Add more names
-            "Name22"
-        ];
-
-        function chooseNames() {
-            for (let i = 0; i < 10; i++) {
-                const roundContainer = document.createElement('div');
-                const roundHeading = document.createElement('h3');
-                roundHeading.innerText = `Round ${i + 1}`;
-                roundContainer.appendChild(roundHeading);
-
-                const selectedNames = [];
-                while (selectedNames.length < 11) {
-                    const randomIndex = Math.floor(Math.random() * names.length);
-                    const randomName = names[randomIndex];
-                    if (!selectedNames.includes(randomName)) {
-                        selectedNames.push(randomName);
-                    }
-                }
-
-                const roundList = document.createElement('ul');
-                selectedNames.forEach(name => {
-                    const listItem = document.createElement('li');
-                    listItem.innerText = name;
-                    roundList.appendChild(listItem);
-                });
-
-                roundContainer.appendChild(roundList);
-                document.getElementById('game').appendChild(roundContainer);
+    function startGame() {
+        if (cards.length === 0) {
+            // Initialize cards
+            for (let i = 1; i <= 22; i++) {
+                cards.push(i);
             }
         }
 
-        chooseNames();
-    </script>
+        shuffleInterval = setInterval(shuffleCards, 100);
+    }
+
+    function shuffleCards() {
+        cards.sort(() => Math.random() - 0.5);
+        displayCards();
+    }
+
+    function pauseGame() {
+        clearInterval(shuffleInterval);
+        displayCards();
+    }
+
+    function finishGame() {
+        pauseGame();
+
+        // Display only 11 cards
+        const selectedCards = cards.slice(0, 11);
+
+        // Assign one card as red and one card as blue
+        const redCardIndex = Math.floor(Math.random() * selectedCards.length);
+        const blueCardIndex = (redCardIndex + 1) % selectedCards.length;
+
+        // Display the cards
+        displayCards(selectedCards, redCardIndex, blueCardIndex);
+    }
+
+    function displayCards(selectedCards = cards, redCardIndex = -1, blueCardIndex = -1) {
+        const cardContainer = document.getElementById('card-container');
+        cardContainer.innerHTML = '';
+
+        for (let i = 0; i < selectedCards.length; i++) {
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            if (i === redCardIndex) {
+                card.classList.add('red-card');
+            } else if (i === blueCardIndex) {
+                card.classList.add('blue-card');
+            }
+
+            card.innerText = selectedCards[i];
+            cardContainer.appendChild(card);
+        }
+    }
+</script>
 
 </body>
-
 </html>
