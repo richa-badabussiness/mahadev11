@@ -1,173 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Background Image Example</title>
-<style>
-  body {
-    /* Set background image */
-    background-image: url('saambsadashiv.jpg');
-    /* Specify background size and other properties */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    /* Add styles for the content if needed */
-    color: #ffffff; /* Example text color */
-    font-family: Arial, sans-serif; /* Example font */
-    /* Additional styles for the body if needed */
-    margin: 0;
-    padding: 0;
-  }
-
-  /* Add additional styles for other elements as needed */
-  h1 {
-    text-align: center;
-  }
-</style>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Change Text Color and Highlight</title>
-    <style>
-        h1 {
-            color: white; /* Text color */
-            background-color: #FF6347; /* Highlight color (Tomato red) */
-            padding: 5px; /* Padding to create space around the text */
-            border-radius: 5px; /* Optional: rounded corners */
-        }
-
-        p {
-            color: white; /* Text color */
-            background-color: #32CD32; /* Highlight color (Lime green) */
-            padding: 5px; /* Padding to create space around the text */
-            border-radius: 5px; /* Optional: rounded corners */
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>22 Card Shuffle Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background: url("saambsadashiv.jpg") no-repeat center center fixed;
+      background-size: cover;
+    }
+    .buttons {
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .card {
+      width: 60px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .card.blue {
+      background: lightblue;
+      border-color: blue;
+    }
+    .card.red {
+      background: lightcoral;
+      border-color: red;
+    }
+  </style>
 </head>
 <body>
 
+  <h1>22 Card Shuffle Game</h1>
+  <div class="buttons">
+    <button onclick="startGame()">Start</button>
+    <button onclick="stopGame()">Stop</button>
+  </div>
 
+  <div class="cards" id="cards"></div>
 
-</body>
-</html>
-
-</head>
-<body>
-<h1>॥ श्री गणेशाय नमः ॥ </h1>
-<h1> सांब सदाशिव |</h1>
-
-<p> शिव सदा सहायता, कृष्णा सदा सहयाते् |</p>
-
-</body>
-    <title>Card Game</title>
-    <style>
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        #card-container {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .card {
-            width: 80px;
-            height: 120px;
-            margin: 5px;
-            background-color: purple;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .red-card {
-            background-color: red;
-            color: white;
-        }
-
-        .blue-card {
-            background-color: blue;
-            color: white;
-        }
-    </style>
-</head>
-<body>
-
-<div id="card-container"></div>
-<button onclick="startGame()">Start</button>
-<button onclick="pauseGame()">Pause</button>
-<button onclick="finishGame()">Finish</button>
-
-<script>
+  <script>
     let cards = [];
     let shuffleInterval;
+    let blueCard = null;
+    let redCard = null;
+    let gameRunning = false;
 
-    function startGame() {
-        if (cards.length === 0) {
-            // Initialize cards
-            for (let i = 1; i <= 22; i++) {
-                cards.push(i);
-            }
-        }
-
-        shuffleInterval = setInterval(shuffleCards, 100);
+    function createCards() {
+      cards = [];
+      for (let i = 1; i <= 22; i++) {
+        cards.push(i);
+      }
     }
 
     function shuffleCards() {
-        cards.sort(() => Math.random() - 0.5);
-        displayCards();
+      let shuffleArray = cards.filter(c => c !== blueCard && c !== redCard);
+      shuffleArray.sort(() => Math.random() - 0.5);
+      if (blueCard) shuffleArray.unshift(blueCard);
+      if (redCard) shuffleArray.unshift(redCard);
+      cards = shuffleArray;
+      displayCards();
     }
 
-    function pauseGame() {
-        clearInterval(shuffleInterval);
-        displayCards();
+    function displayCards(showAll = true) {
+      const cardContainer = document.getElementById("cards");
+      cardContainer.innerHTML = "";
+      let displaySet = showAll ? cards : cards.slice(0, 11);
+
+      displaySet.forEach(num => {
+        const cardEl = document.createElement("div");
+        cardEl.classList.add("card");
+        cardEl.textContent = num;
+
+        if (num === blueCard) cardEl.classList.add("blue");
+        if (num === redCard) cardEl.classList.add("red");
+
+        cardEl.addEventListener("click", () => chooseCard(num));
+        cardContainer.appendChild(cardEl);
+      });
     }
 
-    function finishGame() {
-        pauseGame();
-
-        // Display only 11 cards
-        const selectedCards = cards.slice(0, 11);
-
-        // Assign one card as red and one card as blue
-        const redCardIndex = Math.floor(Math.random() * selectedCards.length);
-        const blueCardIndex = (redCardIndex + 1) % selectedCards.length;
-
-        // Display the cards
-        displayCards(selectedCards, redCardIndex, blueCardIndex);
+    function chooseCard(num) {
+      if (!blueCard) {
+        blueCard = num;
+      } else if (!redCard && num !== blueCard) {
+        redCard = num;
+      }
+      displayCards(gameRunning);
     }
 
-    function displayCards(selectedCards = cards, redCardIndex = -1, blueCardIndex = -1) {
-        const cardContainer = document.getElementById('card-container');
-        cardContainer.innerHTML = '';
-
-        for (let i = 0; i < selectedCards.length; i++) {
-            const card = document.createElement('div');
-            card.className = 'card';
-
-            if (i === redCardIndex) {
-                card.classList.add('red-card');
-            } else if (i === blueCardIndex) {
-                card.classList.add('blue-card');
-            }
-
-            card.innerText = selectedCards[i];
-            cardContainer.appendChild(card);
-        }
+    function startGame() {
+      gameRunning = true;
+      clearInterval(shuffleInterval);
+      shuffleInterval = setInterval(shuffleCards, 300);
     }
-</script>
+
+    function stopGame() {
+      gameRunning = false;
+      clearInterval(shuffleInterval);
+      displayCards(false);
+    }
+
+    createCards();
+    displayCards();
+  </script>
 
 </body>
 </html>
+
 
 
